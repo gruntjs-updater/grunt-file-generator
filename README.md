@@ -24,9 +24,9 @@ In your project's Gruntfile, add a section named `file_generator` to the data ob
 
 ```js
 grunt.initConfig({
-  file_generator: {
+  generator: {
     options: {
-      // Task-specific options go here.
+        // Task-specific options go here.
     },
     your_target: {
       // Target-specific file lists and/or options go here.
@@ -37,46 +37,50 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
-Type: `String`
-Default value: `',  '`
+#### options.wrapper
+Type: `Function`
+Return value: `String`
 
-A string value that is used to do something with whatever.
+A function takes join result of `options.template` function and return string
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
+#### options.template
+Type: `Function`
+Return value: `String`
 
-A string value that is used to do something else with whatever else.
+A function takes a filename argument and return a string
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+In this example, the default options are used to do something with whatever. So, in output file will be written string with source file paths.
 
 ```js
 grunt.initConfig({
   file_generator: {
     options: {},
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      'dest/some.txt': ['src/noname.css', 'src/noname.js']
     },
   },
 });
 ```
 
 #### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+In this example, custom options overrides wrapper and template functions. So, in output file will be written string `/* 4242 */`
 
 ```js
 grunt.initConfig({
   file_generator: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      wrapper: function (text) {
+        return '/* ' + text + ' */'
+      },
+      template: function (filepath) {
+        return '42'
+      }
     },
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      'dest/some.txt': ['src/noname.css', 'src/noname.js']
     },
   },
 });
